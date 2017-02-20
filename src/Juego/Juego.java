@@ -8,12 +8,15 @@ import javax.swing.JFrame;
 
 
 // Extendemos aCanvas para ejecutar graficos.
-public class Juego extends Canvas{
+    // Implementamos una nueva interfaz
+public class Juego extends Canvas implements Runnable{
     //Identificador
     private static final long serialVersionUID = 1L;
     
     // Creamos la ventana.
     private static JFrame ventana;
+    // Thread para ejecucion divida. Es decir nuevo hilo de ejecucion.
+    private static Thread thread;
     
     // Dimensiones de la ventana: ANCHO y ALTO.
     private static final int ANCHO = 800;
@@ -50,5 +53,25 @@ public class Juego extends Canvas{
     // Metodo main para que todo funcione. Debe ser siempre publico.
     public static void main(String[] args){
         Juego juego = new Juego();
+        // Para poder iniciar el juego usamos:
+        juego.iniciar();;
     }
+    
+    // Para iniciar el segundo thread por el momento.
+    private void iniciar(){
+        // Iniciamos el thread. Parametro this es la propia clase a iniciar.
+        // Parametro GRAFICOS es para diferenciar el hilo de ejecucion.
+        thread = new Thread(this, "Graficos");
+        // Ejecutamos el Thread.
+        thread.start();
+    }
+    // Para detener el segundo thread por el momento.
+    private void detener(){
+        
+    }
+    // Ejecuta el segundo thread o hilo de ejecucion.
+    public void run() {
+        System.out.println("Segundo hilo ejecutado bien");
+    }
+    
 }
