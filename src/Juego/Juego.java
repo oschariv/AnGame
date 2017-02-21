@@ -30,6 +30,10 @@ public class Juego extends Canvas implements Runnable{
     
     // Nombre de la Aplicacion a mostrar en la ventana.
     private static final String NOMBRE = "AnGame";
+    // Variables a mostrar en la ventana del juego.
+    private static int aps = 0;
+    private static int fps = 0;
+    
     
     // Contructor de la clase juego. La hacemos privada para que niguna otra 
     // pueda hacer intancias de juego.
@@ -89,10 +93,71 @@ public class Juego extends Canvas implements Runnable{
             //ex.printStackTrace();
         }
     }
+    
+    // Metodo para actualizar todas las variables del juego.
+    // Vida, Objetos, FPS, ...
+    private void actualizar(){
+        // Se actualiza cada vez que se ejecuta el metodo.
+        aps++;
+    }
+    
+    // Metodo para ir redibujando los graficos.
+    private void mostrar(){
+        // Se actualiza cada vez que se ejecuta el metodo.
+        fps++;
+    }
+    
     // Ejecuta el segundo thread o hilo de ejecucion.
     public void run() {
+        // REFERENCIAS.
+        // Equivalencia de cuantos NanoSegundos hay en un Segundo.
+        final int NS_POR_SEGUNDO = 1000000000;
+        // Actualizacion por Segundo a las que queremos llegar.
+        final byte APS_OBJETIVO = 60;
+        // da como resultado el total de nano segundos que tienen que pasar 
+        // para obtener los aps objetivo.
+        final double NS_POR_ACTUALIZACION = NS_POR_SEGUNDO / APS_OBJETIVO;
+        // Se atribulle a la variable una cantidad de nanosegundos en el 
+        // momento de igualarla.
+        long referenciaActualizacion = System.nanoTime();
+        long referenciaContador = System.nanoTime();
+        // FIN REFERENCIAS.
+        
+        
+        double tiempoTranscurrido;
+        // Variable de la cantidad de tiempo que ha transcurrido hasta que 
+        // sucede una actualizacion de la pantalla.
+        double delta = 0;
+        
+        
         while(enFuncionamiento){
+            // toma un valor distinto al de referenciaActualizacion cada vez 
+            // que se iguala.
+            final long inicioBucle = System.nanoTime();
+            // mide cuanto tiempo a pasada entre un momento y otro.
+            tiempoTranscurrido = inicioBucle - referenciaActualizacion;
+            // se actualiza a inicioBucle para que las mediciones de espacios ç
+            // entre tiempos sean exactas.
+            referenciaActualizacion = inicioBucle;
             
+            delta += tiempoTranscurrido / NS_POR_ACTUALIZACION;
+            // cuando delta sea uno o mas se actualiza el juego.
+            while (delta >= 1){
+                actualizar();
+                delta--;
+            }
+            
+            // Incluimos estos metodos para que se ejecuten mientras funcione el juego.
+            mostrar();
+            
+            // El contador de FPS se actualiza cada segundo
+            if (System.nanoTime() - referenciaContador > NS_POR_SEGUNDO){
+                // Cabezera de la ventana.
+                ventana.setTitle(NOMBRE + " || APS: " + aps + " || FPS: " + fps);
+                aps = 0;
+                fps = 0;
+                referenciaContador = System.nanoTime();
+            }
         }
     }
     
