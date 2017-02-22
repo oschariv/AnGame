@@ -52,4 +52,8 @@ public class HojaSprites {
         
         
     }
+    // Metodo getter para obtener el ancho.
+    public int getAncho(){
+        return ancho;
+    }
 }
