@@ -1,6 +1,7 @@
 
 package Juego;
 
+import control.Teclado;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -19,6 +20,8 @@ public class Juego extends Canvas implements Runnable{
     private static JFrame ventana;
     // Thread para ejecucion divida. Es decir nuevo hilo de ejecucion.
     private static Thread thread;
+    // Implementamos la clase teclado.
+    private static Teclado teclado;
     
     // Dimensiones de la ventana: ANCHO y ALTO.
     private static final int ANCHO = 800;
@@ -40,6 +43,11 @@ public class Juego extends Canvas implements Runnable{
     private Juego(){
         // Tamaño que nos gustaria para nuestra aplicacion.
         setPreferredSize(new Dimension(ANCHO, ALTO));
+        
+        // Iniciamos el teclado y el keyListener.
+        teclado = new Teclado();
+        // Detecta todas las teclas que se pulsen.
+        addKeyListener(teclado);
         
         // Inicializamos el objeto ventana.
         ventana = new JFrame(NOMBRE);
@@ -97,6 +105,23 @@ public class Juego extends Canvas implements Runnable{
     // Metodo para actualizar todas las variables del juego.
     // Vida, Objetos, FPS, ...
     private void actualizar(){
+        // Actualizamos el teclado.
+        teclado.actualizar();
+        
+        // Sentecias if para descubrir que tecla se ha pulsado.
+        if (teclado.arriba){
+            System.out.println("arriba");
+        }
+        if (teclado.abajo) {
+            System.out.println("abajo");
+        }
+        if (teclado.izquierda) {
+            System.out.println("izquierda");
+        }
+        if (teclado.derecha) {
+            System.out.println("derecha");
+        }
+        
         // Se actualiza cada vez que se ejecuta el metodo.
         aps++;
     }
@@ -128,6 +153,9 @@ public class Juego extends Canvas implements Runnable{
         // Variable de la cantidad de tiempo que ha transcurrido hasta que 
         // sucede una actualizacion de la pantalla.
         double delta = 0;
+        
+        // Hacemos que el teclado y raton aparezcan por defecto dentro del juego 
+        requestFocus();
         
         
         while(enFuncionamiento){
